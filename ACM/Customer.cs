@@ -1,19 +1,29 @@
-﻿using System;
+﻿using ACM.Common;
+using System;
 using System.Collections.Generic;
 
 namespace ACM.BL
 {
-    public class Customer
+    //do same for Order and Product
+    public class Customer : EntityBase, ILoggable
     {
         //default constructor
         public Customer()
+            : this(0) //constructor chaining
         {
 
         }
+        //Customer HAS A Home Address and a Work Address (Composition)
+        //public Address WorkAddress { get; set; }
+        //public Address HomeAddress { get; set; }
+        public List<Address> AddressList { get; set; } //the list doesn't have a good default value. default null
+
+        public int CustomerType { get; set; } //defining a type for our customer, without using inheritance yet
 
         public Customer(int customerId)
         {
             this.CustomerId = customerId;
+            AddressList = new List<Address>();
         }
 
         //this member belongs to the type itself
@@ -54,7 +64,29 @@ namespace ACM.BL
         }
 
         //validate the state of the object
-        public bool Validate()
+        //public bool Validate()
+        //{
+        //    var isValid = true;
+
+        //    if (string.IsNullOrWhiteSpace(LastName)) isValid = false;
+        //    if (string.IsNullOrWhiteSpace(EmailAddress)) isValid = false;
+
+        //    return isValid;
+        //}
+
+        public override string ToString()
+        {
+            return FullName;
+        }
+
+        public string Log()
+        {
+            var logging = this.CustomerId + ": " + this.FullName;
+
+            return logging;
+        }
+
+        public override bool Validate()
         {
             var isValid = true;
 
@@ -62,30 +94,6 @@ namespace ACM.BL
             if (string.IsNullOrWhiteSpace(EmailAddress)) isValid = false;
 
             return isValid;
-        }
-
-        public bool Save()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// return one customer
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <returns></returns>
-        public Customer Retrieve(int customerId)
-        {
-            return new Customer();
-        }
-
-        /// <summary>
-        /// return a list of customers
-        /// </summary>
-        /// <returns></returns>
-        public List<Customer> Retrieve()
-        {
-            return new List<Customer>();
         }
     }
 }
